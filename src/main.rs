@@ -1,3 +1,7 @@
+use crate::prompts::write_git_conf;
+
+mod prompts;
+
 fn main() {
-    println!("Hello, world!");
+    write_git_conf();
 }
