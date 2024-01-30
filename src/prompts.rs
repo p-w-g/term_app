@@ -91,3 +91,32 @@ pub fn write_npmrc() {
         }
     }
 }
+
+pub fn write_bashrc() {
+    let home = get_home();
+    let bashrc = format!("{}/.testfile", home);
+
+    if let Ok(_) = File::open(&bashrc) {
+        println!("The .bashrc file already exists.");
+    } else {
+        match File::create(&bashrc) {
+            Ok(mut file) => {
+                let mut buffer = Vec::new();
+
+                let _template = write!(
+                    buffer,
+                    "alias myBash=\"code {}/.bashrc\"\nsecond_line\nthird_line_with_var={}\n",
+                    home, home
+                );
+
+                file.write_all(&buffer).unwrap();
+
+                println!("The .bashrc file has been created.");
+            }
+            Err(err) => {
+                eprintln!("Error creating .bashrc file: {}", err);
+                std::process::exit(1);
+            }
+        }
+    }
+}
