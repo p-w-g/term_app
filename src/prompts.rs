@@ -61,3 +61,33 @@ pub fn write_git_conf() {
         }
     }
 }
+
+pub fn write_npmrc() {
+    let home = get_home();
+    let npmrc = format!("{}/.npmrc", home);
+
+    if let Ok(_) = File::open(&npmrc) {
+        println!("The .npmrc file already exists.");
+    } else {
+        let pat = get_input("PAT");
+        match File::create(&npmrc) {
+            Ok(mut file) => {
+                let mut buffer = Vec::new();
+
+                let _template = write!(
+                    buffer,
+                    "first_line\nsecond_line\nthird_line_with_var={}\n",
+                    pat
+                );
+
+                file.write_all(&buffer).unwrap();
+
+                println!("The .npmrc file has been created.");
+            }
+            Err(err) => {
+                eprintln!("Error creating .npmrc file: {}", err);
+                std::process::exit(1);
+            }
+        }
+    }
+}
